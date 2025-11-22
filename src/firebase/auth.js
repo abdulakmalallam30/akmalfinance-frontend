@@ -1,26 +1,18 @@
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut, 
-  onAuthStateChanged,
-  updateProfile
-} from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from './config';
 
 // Create user with email and password
 export const createUser = async (email, password, displayName) => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
     const user = userCredential.user;
     
     // Update user profile with display name
-    await updateProfile(user, {
+    await user.updateProfile({
       displayName: displayName
     });
     
     // Create user document in Firestore
-    await setDoc(doc(db, 'users', user.uid), {
+    await db.collection('users').doc(user.uid).set({
       uid: user.uid,
       email: user.email,
       displayName: displayName,
@@ -40,7 +32,7 @@ export const createUser = async (email, password, displayName) => {
 // Sign in user
 export const signInUser = async (email, password) => {
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await auth.signInWithEmailAndPassword(email, password);
     return { success: true, user: userCredential.user };
   } catch (error) {
     return { success: false, error: error.message };
@@ -50,7 +42,7 @@ export const signInUser = async (email, password) => {
 // Sign out user
 export const signOutUser = async () => {
   try {
-    await signOut(auth);
+    await auth.signOut();
     return { success: true };
   } catch (error) {
     return { success: false, error: error.message };
@@ -60,8 +52,8 @@ export const signOutUser = async () => {
 // Get user data from Firestore
 export const getUserData = async (uid) => {
   try {
-    const userDoc = await getDoc(doc(db, 'users', uid));
-    if (userDoc.exists()) {
+    const userDoc = await db.collection('users').doc(uid).get();
+    if (userDoc.exists) {
       return { success: true, data: userDoc.data() };
     } else {
       return { success: false, error: 'User data not found' };
@@ -74,7 +66,7 @@ export const getUserData = async (uid) => {
 // Update user data in Firestore
 export const updateUserData = async (uid, data) => {
   try {
-    await setDoc(doc(db, 'users', uid), data, { merge: true });
+    await db.collection('users').doc(uid).set(data, { merge: true });
     return { success: true };
   } catch (error) {
     return { success: false, error: error.message };
@@ -83,5 +75,5 @@ export const updateUserData = async (uid, data) => {
 
 // Listen to auth state changes
 export const onAuthStateChange = (callback) => {
-  return onAuthStateChanged(auth, callback);
+  return auth.onAuthStateChanged(callback);
 };
