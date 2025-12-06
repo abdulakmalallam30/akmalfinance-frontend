@@ -17,7 +17,7 @@ function FileUpload({ onUpload, loading }) {
   const fetchCurrentData = async () => {
     try {
       console.log('📊 Fetching current data...');
-      const response = await fetch('http://localhost:5000/api/expenses');
+      const response = await fetch(`${API_URL}/api/expenses`);
       
       if (response.ok) {
         const data = await response.json();
@@ -49,7 +49,7 @@ function FileUpload({ onUpload, loading }) {
       console.log('🗑️ Clearing all data...');
       
       // Try backend first
-      const response = await fetch('http://localhost:5000/api/expenses', {
+      const response = await fetch(`${API_URL}/api/expenses`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ function FileUpload({ onUpload, loading }) {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
       
-      const response = await fetch('http://localhost:5000/api/upload', {
+      const response = await fetch(`${API_URL}/api/upload`, {
         method: 'POST',
         body: formData,
         signal: controller.signal
