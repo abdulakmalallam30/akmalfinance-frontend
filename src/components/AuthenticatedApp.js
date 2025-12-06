@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { signOutUser } from '../firebase/auth';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 import LandingPagePremium from './LandingPagePremium';
 import LandingPage from './LandingPage';
 import PremiumHeader from './PremiumHeader';
@@ -21,6 +19,8 @@ import IncomeVsExpense from './IncomeVsExpense';
 import { ToastContainer, useToast } from './Toast';
 import { Loader, BarChart3, Receipt, Wallet, TrendingUp, Calculator, LogOut, Upload, Trash2, Edit, Users, Calendar, CreditCard, ArrowLeftRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function AuthenticatedApp() {
   const { currentUser, userData, saveUserData } = useAuth();

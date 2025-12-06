@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, CheckCircle, AlertCircle, FileText, Activity, Trash2, Database, RefreshCw } from 'lucide-react';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 function FileUpload({ onUpload, loading }) {
   const [file, setFile] = useState(null);
   const [dragActive, setDragActive] = useState(false);
